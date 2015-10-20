@@ -1,46 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>SPA chapter 1 section 1.2.2</title>
-    <style>
-      /*使用了流式布局(liquid layout) ,界面按照显示大小自适应,滑块总是固定在界面右下角. */
-      body{width: 100%;height: 100%;overflow: hidden;background-color: #777;}
-      #spa{position: absolute;top: 8px;left: 8px;bottom: 8px;right: 8px;border-radius: 8px 8px 0 8px;background-color: #fff;}
-      .spa-slider{position: absolute;bottom: 0;right: 2px;width: 300px;height: 16px;cursor: pointer;border-radius: 8px 0 0 0;background-color: #f00;}
-    </style>
+  <meta charset="UTF-8">
+  <title>SPA chapter 1 section 1.2.2</title>
+  <style>
+    /*使用了流式布局(liquid layout) ,界面按照显示大小自适应,滑块总是固定在界面右下角. */
+    body{width: 100%;height: 100%;overflow: hidden;background-color: #777;}
+    #spa{position: absolute;top: 8px;left: 8px;bottom: 8px;right: 8px;border-radius: 8px 8px 0 8px;background-color: #fff;}
+    .spa-slider{position: absolute;bottom: 0;right: 2px;width: 300px;height: 16px;cursor: pointer;border-radius: 8px 0 0 0;background-color: #f00;}
+  </style>
 </head>
 <body>
-  <div id="spa">
-    <div class="spa-slider"></div>
-  </div>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<div id="spa">
+</div>
+<script src="http://lib.sinaapp.com/js/jquery/1.9.1/jquery-1.9.1.min.js"></script>
+
 <script>
 
 </script>
 <script>
-/*jslint
-browser:true,continue:true,devel:true,indent:2,maxerr:50,newcap:true,nomen:true,plusplus:true,
-regexp:true,sloppy:true,vars:true,white:true
-*/
+  var a = 1;
 
-/* jslint settings */
-// Module /spa/
-//
-var spa = (function ($) {
-  // Module scope variables
-  var
+
+  /*jslint
+   browser:true,continue:true,devel:true,indent:2,maxerr:50,newcap:true,nomen:true,plusplus:true,
+   regexp:true,sloppy:true,vars:true,white:true
+   */
+
+  /* jslint settings */
+  // Module /spa/
+  //
+  var spa = (function ($) {
+    // Module scope variables
+
     // Set constants
-    configMap = {
-      extended_height:434,
-      extended_title:'Click to retract / 点击收起',
-      retracted_height:'16',
-      retracted_title:'Click to extend / 点击展开',
-      template_html:'<div class="spa-slider"><\/div>'
-    },
+    var configMap = {
+              extended_height:434,
+              extended_title:'Click to retract / 点击收起',
+              retracted_height:'16',
+              retracted_title:'Click to extend / 点击展开',
+              template_html:'<div class="spa-slider"><\/div>'
+            },
     // Declare all other module scope variables
-    $chatSlider,
-    toggleSlider,onclickSlider,initModule;
+            $chatSlider,
+            toggleSlider,onclickSlider,initModule;
 
     // DOM method /toggleSlider/
     // alternates slider height
@@ -48,12 +51,12 @@ var spa = (function ($) {
     toggleSlider = function () {
       var slider_height = $chatSlider.height();
       // extend slider if fully retracted
-      if (slider_height === configMap.retracted_height) {
-          $chatSlider.animate({height:configMap.extended_height}).attr('title',configMap.extended_title);
-          return true;
+      if (slider_height == configMap.retracted_height) {
+        $chatSlider.animate({height:configMap.extended_height}).attr('title',configMap.extended_title);
+        return true;
       }
       // retract slider if fully extended
-      else if (slider_height === configMap.extended_height) {
+      else if (slider_height == configMap.extended_height) {
         $chatSlider.animate({height:configMap.retracted_height}).attr('title',configMap.retracted_title);
         return true;
       }
@@ -73,16 +76,24 @@ var spa = (function ($) {
     // Sets initial state and provides feature
     //
     initModule = function ($container) {
-        // render HTML
-        $container.html(configMap.template_html);
+      // render HTML
+      $container.html(configMap.template_html);
 
-        $chatSlider = $container.find('.')
-        // initialize slider height and title
-        // bind the user click event to the event handler
+      $chatSlider = $container.find('.spa-slider');
+      // initialize slider height and title
+      // bind the user click event to the event handler
+      $chatSlider.attr('title',configMap.retracted_title).click(onclickSlider);
+      return true;
+
     };
-}());
-// Start spa when DOM is ready
+    return {initMode:initModule};
+  }(jQuery));
 
+jQuery(document).ready(
+  function () {
+    spa.initMode(jQuery('#spa'));
+  }
+);
 
 </script>
 </body>
