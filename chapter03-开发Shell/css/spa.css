@@ -16,3 +16,53 @@ h1,h2,h3,h4,h5,h6,p{
 	margin-bottom: 10px;
 }
 ol,ul,dl {list-style-position: inside;}
+/** End reset */
+
+/** Begin standard selectors */
+body {
+	font: 13px 'Trebuchet MS', Verdana,Helvetica,Arial,sans-serif;
+	color: #444;
+	background-color: #888;
+}
+
+a {
+	text-decoration: none;
+}
+a:link,a:visited {color: inherit;}
+a:hover {text-decoration: underline;}
+strong {
+	font-weight: 800;
+	color: #000;
+}
+/** END standard selectors */
+
+/** Begin spa namespace selectors  */
+#spa {
+	position: absolute;
+	top: 8px;
+	left: 8px;
+	bottom: 8px;
+	right: 8px;
+
+	min-height: 500px;
+	min-width: 500px;
+	overflow: hidden;
+
+	background-color: #fff;
+	border-radius: 0 8px 0 8px;
+}
+/** Begin spa namespace selectors  */
+
+/** Begin utility selectors  */
+.spa-x-select{
+
+}
+.spa-x-clearfloat {
+	height: 0 !important;
+	float: none !important;
+	visibility: hidden !important;
+	clear: both !important;
+	/*希望文档识别出 float 元素,并且保证之后的元素不受 float 影响*/
+}
+
+/** Begin utility selectors  */
