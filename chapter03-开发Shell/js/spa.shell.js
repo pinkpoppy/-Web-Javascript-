@@ -15,6 +15,9 @@ spa.shell = (function() {
   //----------------BEGIN MODULE SCOPE VARIABLES -------------------//
   var
       configMap = {
+				anchor_scheme_map:{
+					chat:{open:true,closed:true}
+				},
         main_html:String()
           + '<div class="spa-shell-head">'
             + '<div class="spa-shell-head-logo"></div>'
@@ -37,16 +40,55 @@ spa.shell = (function() {
       },
       stateMap = {
         $container:null,
+				anchor_map:{},
         is_chat_retracted:true
       },
       jqueryMap = {},
-      setJqueryMap,toogleChat,initModule;
+			copyAnchorMap, setJqueryMap,toggleChat,
+			changeAnchorPart,onHashchange,
+			onClickChat,initModule;
   //----------------END MODULE SCOPE VARIABLES -------------------//
 
   //----------------BEGIN UTILITY METHODS ------------------------//
+	copyAnchorMap = function () {
+		return $.extend(true,{},stateMap.anchor_map);
+	};
   //----------------END UTILITY METHODS --------------------------//
 
   //----------------BEGIN DOM METHODS ----------------------------//
+	changeAnchorPart = function (arg_map) {
+		var
+			anchor_map_revise = copyAnchorMap(),
+			bool_return = true,
+			key_name,key_name_dep;
+		// begin merge changes into anchor map
+		KEYVAL:
+		for(key_name in arg_map) {
+			if (arg_map.hasOwnProperty(key_name)) {
+				if (key_name.indexOf('_')===0) {
+					continue KEYVAL;
+				}
+				anchor_map_revise[key_name] = arg_map[key_name];
+
+				key_name_dep = '_' + key_name;
+
+				if (arg_map[key_name_dep]) {
+					anchor_map_revise[key_name_dep] = arg_map[key_name_dep];
+				} else {
+					delete anchor_map_revise[key_name_dep];
+					delete anchor_map_revise['_s' + key_name_dep];
+				}
+			}
+		}
+		try {
+			$.uriAnchor.setAnchor(anchor_map_revise);
+		}
+		catch (error) {
+			$.uriAnchor.setAnchor(stateMap.anchor_map,null,true);
+			bool_return = false;
+		}
+		return bool_return;
+	};
   // Begin DOM method /setJqueryMap/
   setJqueryMap = function () {
     var $container = stateMap.$container;
@@ -56,7 +98,7 @@ spa.shell = (function() {
     };
   };
   //----------------END DOM METHODS ------------------------------//
-  toogleChat = function (do_extend,callback) {
+  toggleChat = function (do_extend,callback) {
     var
         px_chat_ht = jqueryMap.$chat.height(),
         is_open = px_chat_ht === configMap.chat_extend_height,
@@ -101,7 +143,12 @@ spa.shell = (function() {
   }
   //----------------BEGIN EVENT HANDLERS -------------------------//
   onClickChat = function (e) {
-    toogleChat(stateMap.is_chat_retracted);
+		if (toggleChat(stateMap.is_chat_retracted)) {
+			$.uriAnchor.setAnchor({
+				chat:(stateMap.is_chat_retracted ? 'open':'closed')
+			});
+		}
+    //toggleChat(stateMap.is_chat_retracted);
     return false;
   }
   //----------------END EVENT HANDLERS ---------------------------//
